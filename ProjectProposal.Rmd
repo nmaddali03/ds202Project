@@ -11,20 +11,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+**Names:** Arlena Wang, Neha Medalli
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+**Link:** [climate change](https://datacatalog.worldbank.org/search/dataset/0040205)
 
-```{r cars}
-summary(cars)
-```
+**Overview:**
+This dataset includes information about climate change and was collected from the Climate Change Knowledge Portal and World Development indicators.  The data includes greenhouse gas emissions, energy consumption, and more from the time period 1990-2011.
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+**Plan:**
+*Which country had the most cause/impact towards climate change from 1990-2011?
+*What was the population growth/change over the time period 1990-2011
+*How does the US gas emissions compare to other countries?
+*How does population growth affect GDP?
+*Which country does climate change affect the most from 1990-2011?
+*How does GDP affect amount of gas emissions?
+*Explore many variables and find valid correlations between them in regards to climate change
