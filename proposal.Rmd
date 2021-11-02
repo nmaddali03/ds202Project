@@ -16,9 +16,9 @@ knitr::opts_chunk$set(echo = TRUE)
 **Link:** [climate change](https://datacatalog.worldbank.org/search/dataset/0040205)
 
 **Overview:**
-This dataset includes information about climate change and was collected from the Climate Change Knowledge Portal and World Development indicators.  The data includes greenhouse gas emissions, energy consumption, and more from the time period 1990-2011.
+This dataset includes information about climate change and was collected from the Climate Change Knowledge Portal and World Development indicators.  The data includes greenhouse gas emissions, energy consumption, and more from the time period 1990-2011. The dataset has three different sheets: Data, Country, Series. Data all the relevant data for climate change collected for the years 1990-2011. Country has a list of all the countries data has been collected on. Series has a summary of the different abbreviations for the types of data (essentially a data code book). It provides explanation and sources to each of the categories of data collected for further research to benefit analysis.
 
-**Plan for Explanatory Analysis:**
+**Plan for Exploratory Analysis:**
 *Which country had the most cause/impact towards climate change from 1990-2011?
 *What was the population growth/change over the time period 1990-2011
 *How does the US gas emissions compare to other countries?
