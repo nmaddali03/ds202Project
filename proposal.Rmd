@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 **Overview:**
 This dataset includes information about climate change and was collected from the Climate Change Knowledge Portal and World Development indicators.  The data includes greenhouse gas emissions, energy consumption, and more from the time period 1990-2011.
 
-**Plan:**
+**Plan for Explanatory Analysis:**
 *Which country had the most cause/impact towards climate change from 1990-2011?
 *What was the population growth/change over the time period 1990-2011
 *How does the US gas emissions compare to other countries?
