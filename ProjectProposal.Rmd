@@ -1,6 +1,6 @@
 ---
 title: "ProjectProposal"
-author: "Neha Maddali"
+author: "Neha Maddali, Arlena Wang"
 date: "11/2/2021"
 output: html_document
 ---
