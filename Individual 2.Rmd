@@ -1,0 +1,117 @@
+---
+title: "Individual 2"
+author: "Arlena Wang"
+date: "12/3/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(ggrepel)
+library(lubridate)
+library(reshape2)
+```
+
+#import the data
+```{r}
+data <- readxl::read_xlsx('ClimateChange.xlsx', sheet='Data')
+country <- readxl::read_xlsx('ClimateChange.xlsx', sheet='Country')
+series <- readxl::read_xlsx('ClimateChange.xlsx', sheet='Series')
+```
+
+#change the ".." cells in the years to n/a or 0
+```{r}
+data <- na_if(data, '..')
+
+```
+
+#Questions Investigated
+1.) Which country had the most cause/impact towards climate change from 1990-2011?
+2.) What was the population growth/change over the time period 1990-2011?
+3.) How does the US gas emissions compare to other countries?
+
+**1.) Which country had the most cause/impact towards climate change from 1990-2011?**
+
+**Variable utilized:**
+SP.POP.TOTL=population
+
+```{r}
+totalpop <- data %>% filter(`Series code` == 'SP.POP.TOTL') %>% 
+  summarize(Country_Name =`Country name`, Series_Code =`Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
+            `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
+            `2008`,`2009`,`2010`,`2011`)
+
+totalpop<-melt(pop, id.vars=c("Country_Name", "Series_Code"))
+
+pop <- pop %>%
+  group_by(`Country name`) %>%
+  summarize(Country_Name=`Country name`,`Series code`, year=`variable`,population=`value`)
+
+pop$`Series code` <- NULL
+pop$`Country name` <- NULL
+
+significant <- filter(pop, Country_Name %in% c("China", "Germany", "India", "Iran, Islamic Rep.", "Japan", "Korea, Dem. Rep.", "Russian Federation", "United States"))
+
+ggplot(significant, aes(x=year, y=population)) + geom_point() + facet_wrap(~Country_Name) + labs(x="year", y="population", title="Population Growth from 1990-2011") + theme(axis.text.x = element_text(angle = 90)) + scale_y_discrete(breaks = seq(-3, 3)
+
+```
+
+**2.) What was the population growth/change over the time period 1990-2011?**
+
+**Variable utilized:**
+SP.POP.GROW=population growth (annual %)
+
+```{r}
+pop <- data %>% filter(`Series code` == 'SP.POP.GROW') %>% 
+  summarize(`Country name`, `Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
+            `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
+            `2008`,`2009`,`2010`,`2011`)
+
+pop<-melt(pop, id.vars=c("Country name", "Series code"))
+
+pop <- pop %>%
+  group_by(`Country name`) %>%
+  summarize(Country_Name=`Country name`,`Series code`, year=`variable`,population=`value`)
+
+pop$`Series code` <- NULL
+pop$`Country name` <- NULL
+
+US <- filter(pop, Country_Name %in% c("United States"))
+
+ggplot(US, aes(x=year, y=population)) + geom_point() + labs(x="year", y="population", title="Population Growth from 1990-2011 in the US") 
+```
+
+**3.) How does the US gas emissions compare to other countries?**
+
+**Variable utilized:**
+EN.ATM.CO2E.KT = CO2 emissions, total (KtCO2)
+
+```{r}
+
+gas <- data %>% filter(`Series code` == 'EN.ATM.CO2E.KT') %>% 
+  summarize(`Country name`, `Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
+            `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
+            `2008`,`2009`,`2010`,`2011`)
+
+pop<-melt(pop, id.vars=c("Country name", "Series code"))
+
+pop <- pop %>%
+  group_by(`Country name`) %>%
+  summarize(Country_Name=`Country name`,`Series code`, year=`variable`,population=`value`)
+
+pop$`Series code` <- NULL
+pop$`Country name` <- NULL
+
+```
+
+

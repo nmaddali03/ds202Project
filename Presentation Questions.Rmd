@@ -1,0 +1,34 @@
+---
+title: "Presentation Questions"
+author: "Arlena Wang"
+date: "12/5/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+**1.) an introduction to background for the dataset**
+
+**2.) how you obtained the data**
+The dataset was obtained from the website, [climate change](https://datacatalog.worldbank.org/search/dataset/0040205). This dataset includes information about climate change and was collected from the Climate Change Knowledge Portal and World Development indicators.  The data includes greenhouse gas emissions, energy consumption, and more from the time period 1990-2011. The dataset has three different sheets: Data, Country, Series. Data all the relevant data for climate change collected for the years 1990-2011. Country has a list of all the countries data has been collected on. Series has a summary of the different abbreviations for the types of data (essentially a data code book). It provides explanation and sources to each of the categories of data collected for further research to benefit analysis.
+
+**3.) Questions raised**
+*Which country had the most cause/impact towards climate change from 1990-2011?
+*What was the population growth/change over the time period 1990-2011
+*How does the US gas emissions compare to other countries?
+*How does population growth affect GDP?
+*Which country has the most environmental impact from climate change in the time period 1990-2011?
+*How does GDP affect amount of gas emissions?
+*Explore many variables and find valid correlations between them in regards to climate change
+
+**4.) challenges faced and techniques used**
+
+Cleaning the data was a big challenge.  There were several null values and columns and rows that needed to be reorganized.  For example, many rows and columns needed to be separated and switched in order to do data analysis.  In addition, this dataset was very large which requires the program, r, to use a lot of time to load for graphics for exploratory analysis.  Thus, many graphs only analyzed main countries and values.
+
+**5.) featured infographics to showcase your main findings, which should be the emphasis of the short presentation**
+
+**6.) your other findings and conclusion**
