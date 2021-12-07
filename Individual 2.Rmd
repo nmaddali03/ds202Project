@@ -23,7 +23,7 @@ library(reshape2)
 ```
 
 #import the data
-```{r}
+```{r warning=FALSE}
 data <- readxl::read_xlsx('ClimateChange.xlsx', sheet='Data')
 country <- readxl::read_xlsx('ClimateChange.xlsx', sheet='Country')
 series <- readxl::read_xlsx('ClimateChange.xlsx', sheet='Series')
@@ -104,7 +104,6 @@ ggplot(popsignificant, aes(x=year, y=population)) + geom_point() + facet_wrap(~C
 
 The figure shows a general decrease in population growth for annual percentage as years increase from 1990 to 2011.  While this may be coincidental, it may be due to problems that are caused by climate change.
 
-
 **4.) Does the amount of gas emissions affect the total population?**
 
 **Variable utilized:**
@@ -148,10 +147,10 @@ effect <- totalpopsignificant %>%
           select(Country_Name, year, gas_emission),
           by=c("Country_Name", "year"))
 
-ggplot(effect, aes(x=gas_emission, y=Total_population)) + geom_point() + facet_wrap(~Country_Name, scales="free") + labs(x="Gas Emissions (KtCO2)", y="Total Population", title="Total Population Vs. Gas Emissions from 1990-2011") + theme(axis.text.x = element_text(angle = 90)
+ggplot(effect, aes(x=Total_population, y=gas_emission)) + geom_point() + facet_wrap(~Country_Name, scales="free") + labs(x="Gas Emissions (KtCO2)", y="Total Population", title="Gas Emissions Vs. Total Population from 1990-2011") + theme(axis.text.x = element_text(angle = 90))
 ```
 
-
+The figure shows a general positive relationship between total population and amount of gas emissions.  The Russian Federation shows a decrease then increase in amount of gas emissions.  Germany had a general decrease between total population and gas emissions.  Germany and the Russian Federation may be trying to significantly reduce their fuel emissions.  The general pattern of an increase in population correlates with an increase in gas emissions for most countries.  This is due to more people causing more activity and fuel consumption which leads to more gas emissions.
 
 **Other Conclusions**
-Most countries have an increasing value of gas emissions over the years from 1990-2011 which indicates a contuity of increasing gas emission today.  Some countries including Germany and the Russian Federation have some fluctuation in the amount of gas emissions showing some decline and incline.  
+Most countries have an increasing value of gas emissions over the years from 1990-2011 which indicates a continuity of increasing gas emission today.  Some countries including Germany and the Russian Federation have some fluctuation in the amount of gas emissions showing some decline and incline.  
