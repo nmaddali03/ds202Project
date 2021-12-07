@@ -34,12 +34,16 @@ series <- readxl::read_xlsx('ClimateChange.xlsx', sheet='Series')
 data <- na_if(data, '..')
 ```
 
-#Questions Investigated
-1.) Which country had the most cause/impact towards climate change from 1990-2011?
-2.) How does the US gas emissions compare to other countries?
-3.) What was the population growth/change over the time period 1990-2011?
+## Questions Investigated
+1.) Which country had the most cause/impact towards climate change from 1990-2011? 
+
+2.) How does the US gas emissions compare to other countries? 
+
+3.) What was the population growth/change over the time period 1990-2011? 
+
 4.) Does the amount of gas emissions affect the total population?
 
+## Data Analysis
 
 **1.) Which country had the most cause/impact towards climate change from 1990-2011?**
 
@@ -62,13 +66,16 @@ gas$Series_Code <- NULL
 
 gassignificant <- filter(gas, Country_Name %in% c("China", "Germany", "India", "Iran, Islamic Rep.", "Japan", "Korea, Dem. Rep.", "Russian Federation", "United States"))
 
-ggplot(gassignificant, aes(x=year, y=gas_emission)) + geom_bar(stat="identity") + facet_wrap(~Country_Name, scales="free") + labs(x="Year", y="Gas Emissions", title="Gas Emissions from 1990-2011") + theme(axis.text.x = element_text(angle = 90))
+ggplot(gassignificant, aes(x=year, y=gas_emission)) + geom_bar(stat="identity") + facet_wrap(~Country_Name, scales="free") + labs(x="Year", y="Gas Emissions (KtCO2)", title="Gas Emissions from 1990-2011") + theme(axis.text.x = element_text(angle = 90))
 ```
+This figure shows only the most relevant countries with larger quantities of gas emission.  This includes China, Germany, India, Iran, Islamic Republic, Japan, Korea, Democratic Republic, Russian Federation, and the United States.
 
+
+As climate change is mainly caused by gas emissions, from years 1990 to 2011, China has contributed the most towards climate change based on the provided figure.  When looking at the figure, China has an increasing gas emission value as years pass with the highest gas emission in 2008, at 7031916.21 million metric tons of CO2.  This presents relevant information as China maintains a very large infrastructure development which emits a large amount of CO2 during the refining process.  Many construction-related activities from this cause the CO2 emissions.
 
 **2.) How does the US gas emissions compare to other countries?**
 
-
+Looking at the same figure, it seems that US has the second most gas emissions as it also has an increasing value of gas emissions over the years with its highest value at 5461013.74 million metric tons of CO2.  This may be due the amount of transportation, electricity, industry, and agriculture that is present in the US.  There are some fluctuations that can be due to changes in economy, price of fuel, and other factors.  Overall, it follows a similar trend to other countries as there is a positive relationship between year and amount of gas emissions.  
 
 **3.) What was the population growth/change over the time period 1990-2011?**
 
@@ -95,15 +102,16 @@ popsignificant <- filter(pop, Country_Name %in% c("China", "Germany", "India", "
 ggplot(popsignificant, aes(x=year, y=population)) + geom_point() + facet_wrap(~Country_Name) + labs(x="Year", y="Population Growth (annual %)", title="Population Growth from 1990-2011") + theme(axis.text.x = element_text(angle = 90)) 
 ```
 
-**3.) 4.) Does the amount of gas emissions affect the total population?**
+The figure shows a general decrease in population growth for annual percentage as years increase from 1990 to 2011.  While this may be coincidental, it may be due to problems that are caused by climate change.
+
+
+**4.) Does the amount of gas emissions affect the total population?**
 
 **Variable utilized:**
 EN.ATM.CO2E.KT = CO2 emissions, total (KtCO2)
 SP.POP.TOTL= total population
 
-
 ```{r}
-
 gas <- data %>% filter(`Series code` == 'EN.ATM.CO2E.KT') %>% 
   summarize(Country_Name =`Country name`, Series_Code =`Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
             `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
@@ -140,7 +148,10 @@ effect <- totalpopsignificant %>%
           select(Country_Name, year, gas_emission),
           by=c("Country_Name", "year"))
 
-ggplot(effect, aes(x=gas_emission, y=Total_population)) + geom_point() + facet_wrap(~Country_Name, scales="free") + labs(x="Gas Emissions (KtCO2)", y="Total Population", title="Total Population Vs. Gas Emissions from 1990-2011") + theme(axis.text.x = element_text(angle = 90))
+ggplot(effect, aes(x=gas_emission, y=Total_population)) + geom_point() + facet_wrap(~Country_Name, scales="free") + labs(x="Gas Emissions (KtCO2)", y="Total Population", title="Total Population Vs. Gas Emissions from 1990-2011") + theme(axis.text.x = element_text(angle = 90)
 ```
 
 
+
+**Other Conclusions**
+Most countries have an increasing value of gas emissions over the years from 1990-2011 which indicates a contuity of increasing gas emission today.  Some countries including Germany and the Russian Federation have some fluctuation in the amount of gas emissions showing some decline and incline.  
