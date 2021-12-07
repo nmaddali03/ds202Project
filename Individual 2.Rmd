@@ -32,41 +32,45 @@ series <- readxl::read_xlsx('ClimateChange.xlsx', sheet='Series')
 #change the ".." cells in the years to n/a or 0
 ```{r}
 data <- na_if(data, '..')
-
 ```
 
 #Questions Investigated
 1.) Which country had the most cause/impact towards climate change from 1990-2011?
-2.) What was the population growth/change over the time period 1990-2011?
-3.) How does the US gas emissions compare to other countries?
+2.) How does the US gas emissions compare to other countries?
+3.) What was the population growth/change over the time period 1990-2011?
+4.) Does the amount of gas emissions affect the total population?
+
 
 **1.) Which country had the most cause/impact towards climate change from 1990-2011?**
 
 **Variable utilized:**
-SP.POP.TOTL=population
+EN.ATM.CO2E.KT = CO2 emissions, total (KtCO2)
 
 ```{r}
-totalpop <- data %>% filter(`Series code` == 'SP.POP.TOTL') %>% 
+gas <- data %>% filter(`Series code` == 'EN.ATM.CO2E.KT') %>% 
   summarize(Country_Name =`Country name`, Series_Code =`Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
             `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
             `2008`,`2009`,`2010`,`2011`)
 
-totalpop<-melt(pop, id.vars=c("Country_Name", "Series_Code"))
+gas<-melt(gas, id.vars=c("Country_Name", "Series_Code"))
 
-pop <- pop %>%
-  group_by(`Country name`) %>%
-  summarize(Country_Name=`Country name`,`Series code`, year=`variable`,population=`value`)
+gas <- gas %>%
+  group_by(Country_Name) %>%
+  summarize(Country_Name,Series_Code, year=`variable`,gas_emission=`value`)
 
-pop$`Series code` <- NULL
-pop$`Country name` <- NULL
+gas$Series_Code <- NULL
 
-significant <- filter(pop, Country_Name %in% c("China", "Germany", "India", "Iran, Islamic Rep.", "Japan", "Korea, Dem. Rep.", "Russian Federation", "United States"))
+gassignificant <- filter(gas, Country_Name %in% c("China", "Germany", "India", "Iran, Islamic Rep.", "Japan", "Korea, Dem. Rep.", "Russian Federation", "United States"))
 
-ggplot(significant, aes(x=year, y=population)) + geom_point() + facet_wrap(~Country_Name) + labs(x="year", y="population", title="Population Growth from 1990-2011") + theme(axis.text.x = element_text(angle = 90)) + scale_y_discrete(breaks = seq(-3, 3)
-
+ggplot(gassignificant, aes(x=year, y=gas_emission)) + geom_bar(stat="identity") + facet_wrap(~Country_Name, scales="free") + labs(x="Year", y="Gas Emissions", title="Gas Emissions from 1990-2011") + theme(axis.text.x = element_text(angle = 90))
 ```
 
-**2.) What was the population growth/change over the time period 1990-2011?**
+
+**2.) How does the US gas emissions compare to other countries?**
+
+
+
+**3.) What was the population growth/change over the time period 1990-2011?**
 
 **Variable utilized:**
 SP.POP.GROW=population growth (annual %)
@@ -86,32 +90,57 @@ pop <- pop %>%
 pop$`Series code` <- NULL
 pop$`Country name` <- NULL
 
-US <- filter(pop, Country_Name %in% c("United States"))
+popsignificant <- filter(pop, Country_Name %in% c("China", "Germany", "India", "Iran, Islamic Rep.", "Japan", "Korea, Dem. Rep.", "Russian Federation", "United States"))
 
-ggplot(US, aes(x=year, y=population)) + geom_point() + labs(x="year", y="population", title="Population Growth from 1990-2011 in the US") 
+ggplot(popsignificant, aes(x=year, y=population)) + geom_point() + facet_wrap(~Country_Name) + labs(x="Year", y="Population Growth (annual %)", title="Population Growth from 1990-2011") + theme(axis.text.x = element_text(angle = 90)) 
 ```
 
-**3.) How does the US gas emissions compare to other countries?**
+**3.) 4.) Does the amount of gas emissions affect the total population?**
 
 **Variable utilized:**
 EN.ATM.CO2E.KT = CO2 emissions, total (KtCO2)
+SP.POP.TOTL= total population
+
 
 ```{r}
 
 gas <- data %>% filter(`Series code` == 'EN.ATM.CO2E.KT') %>% 
+  summarize(Country_Name =`Country name`, Series_Code =`Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
+            `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
+            `2008`,`2009`,`2010`,`2011`)
+
+gas<-melt(gas, id.vars=c("Country_Name", "Series_Code"))
+
+gas <- gas %>%
+  group_by(Country_Name) %>%
+  summarize(Country_Name,Series_Code, year=`variable`,gas_emission=`value`)
+
+gas$Series_Code <- NULL
+
+gassignificant <- filter(gas, Country_Name %in% c("China", "Germany", "India", "Iran, Islamic Rep.", "Japan", "Korea, Dem. Rep.", "Russian Federation", "United States"))
+
+totalpop <- data %>% filter(`Series code` == 'SP.POP.TOTL') %>% 
   summarize(`Country name`, `Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
             `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
             `2008`,`2009`,`2010`,`2011`)
 
-pop<-melt(pop, id.vars=c("Country name", "Series code"))
+totalpop<-melt(totalpop, id.vars=c("Country name", "Series code"))
 
-pop <- pop %>%
+totalpop <- totalpop %>%
   group_by(`Country name`) %>%
-  summarize(Country_Name=`Country name`,`Series code`, year=`variable`,population=`value`)
+  summarize(Country_Name=`Country name`,`Series code`, year=`variable`,Total_population=`value`)
 
-pop$`Series code` <- NULL
-pop$`Country name` <- NULL
+totalpop$`Series code` <- NULL
+totalpop$`Country name` <- NULL
 
+totalpopsignificant <- filter(totalpop, Country_Name %in% c("China", "Germany", "India", "Iran, Islamic Rep.", "Japan", "Korea, Dem. Rep.", "Russian Federation", "United States"))
+
+effect <- totalpopsignificant %>%
+  inner_join(gassignificant %>%
+          select(Country_Name, year, gas_emission),
+          by=c("Country_Name", "year"))
+
+ggplot(effect, aes(x=gas_emission, y=Total_population)) + geom_point() + facet_wrap(~Country_Name, scales="free") + labs(x="Gas Emissions (KtCO2)", y="Total Population", title="Total Population Vs. Gas Emissions from 1990-2011") + theme(axis.text.x = element_text(angle = 90))
 ```
 
 
