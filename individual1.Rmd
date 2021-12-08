@@ -1,0 +1,59 @@
+---
+title: "individual1"
+author: "Neha Maddali"
+date: "12/7/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+**6.) How does gas emissions affect GDP?**
+
+**Variable utilized:**
+EN.ATM.CO2E.KT = CO2 emissions, total (KtCO2)
+NY.GDP.MKTP.CD = GDP($)
+
+```{r}
+gas <- data %>% filter(`Series code` == 'EN.ATM.CO2E.KT') %>% 
+  summarize(Country_Name =`Country name`, Series_Code =`Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
+            `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
+            `2008`,`2009`,`2010`,`2011`)
+gas<-melt(gas, id.vars=c("Country_Name", "Series_Code"))
+gas <- gas %>%
+  group_by(Country_Name) %>%
+  summarize(Country_Name,Series_Code, year=`variable`,gas_emission=`value`)
+gas$Series_Code <- NULL
+
+gassignificant <- filter(gas, Country_Name %in% c("China", "Germany", "India", 
+                                                  "Iran, Islamic Rep.", "Japan", 
+                                                  "Korea, Dem. Rep.", "Russian Federation", 
+                                                  "United States"))
+
+gdp <- data %>% filter(`Series code` == 'NY.GDP.MKTP.CD') %>% 
+  summarize(`Country name`, `Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
+            `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
+            `2008`,`2009`,`2010`,`2011`)
+gdp<-melt(gdp, id.vars=c("Country name", "Series code"))
+gdp <- gdp %>%
+  group_by(`Country name`) %>%
+  summarize(Country_Name=`Country name`,`Series code`, year=`variable`,GDP=`value`)
+gdp$`Series code` <- NULL
+gdp$`Country name` <- NULL
+
+gdpSig <- filter(gdp, Country_Name %in% c("China", "Germany", "India", "Iran, Islamic Rep.", "Japan", "Korea, Dem. Rep.", "Russian Federation", "United States"))
+
+effect <- gdpSig %>%
+  inner_join(gassignificant %>%
+               select(Country_Name, year, gas_emission),
+             by=c("Country_Name", "year"))
+effect <- na.omit(effect)                           # Apply na.omit function
+
+#multiple graphs in one figure
+ggplot(effect, aes(x=gas_emission, y=GDP)) + geom_point() + facet_wrap(~Country_Name, scales="free") + 
+  labs(x="Gas Emissions (KtCO2)", y="GDP", title="GDP Vs. Gas Emissions from 1990-2011") + 
+  theme(axis.text.x = element_text(angle = 90)) + geom_smooth(method="lm") 
+```
