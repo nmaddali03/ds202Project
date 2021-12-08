@@ -339,8 +339,7 @@ EN.ATM.CO2E.KT = CO2 emissions, total (KtCO2)
 Looking at the same figure above, as climate change is mainly caused by gas emissions, from years 1990 to 2011, China has contributed the most towards climate change based on the provided figure.  When looking at the figure, China has an increasing gas emission value as years pass with the highest gas emission in 2008, at 7031916.21 million metric tons of CO2.  This presents relevant information as China maintains a very large infrastructure development which emits a large amount of CO2 during the refining process.  Many construction-related activities from this cause the CO2 emissions.
 
 **Conclusion**
-
-
+As previously mentioned, there were quite a few empty values for some of the variables throughout the years. We didn’t want to consider these values as 0 because they could’ve simply not have been any data to collect for that year. More specifically, the major questions we were looking into were which countries caused the most impact towards climate change and which countries were most affected by climate change. From looking at specific variables like population growth, total population, GDP and total CO2 emissions, we found that significant contributors to climate change factors were China and the United States. For looking at variables like droughts, floods, extreme temps, annual freshwater withdrawals, land area below 5m we found that the countries that were most impacted from climate change factors were Iran/Islamic Rep. and India. Other conclusions made were that population growth leads to an increase in GDP which in turn leads to an increase in gas emissions and gas emissions are one of the main causes of climate change. 
 
 
 **Contribution Statements**
