@@ -63,7 +63,7 @@ data1 <- test %>% group_by(`Country name`) %>%
 datSig <- filter(data1, `Country name` %in% c("China", "Germany", "India", "Iran, Islamic Rep.", 
                                             "Japan", "Korea, Dem. Rep.", "Russian Federation", 
                                             "United States"))
-ggplot(datSig, aes(x=population, y=GDP, colour = `Country name`, group = `Country name`)) + geom_point()+ geom_line() +labs(x="Population Growth (annual %)", y="GDP ($)", title="GDP Vs. Population from 1990-2011")
+ggplot(datSig, aes(x=population, y=GDP, colour = `Country name`, group = `Country name`)) + geom_point()+ geom_line() +labs(x="Population Growth (annual %)", y="GDP ($)", title="GDP Vs. Population Growth (annual %) from 1990-2011")
 ```
 
 
