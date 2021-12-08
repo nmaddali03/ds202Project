@@ -106,7 +106,7 @@ impact <- impact %>% group_by(`Country name`) %>%
   mutate(`H20 Withdrawal` = as.numeric(`H20 Withdrawal`)) %>% 
   mutate(`Land Below` = as.numeric(`Land Below`))
 
-test <- impact %>% summarize(`Country name`, `Natural Disasters`, `H20 Withdrawal`, `Land Below`)
+#test <- impact %>% summarize(`Country name`, `Natural Disasters`, `H20 Withdrawal`, `Land Below`)
 
 impactChina <- filter(impact, `Country name` %in% c("China"))
 a <- mean(impactChina$`Natural Disasters`,na.rm=TRUE)
@@ -128,23 +128,42 @@ d <- mean(impactUS$`Natural Disasters`,na.rm=TRUE)
 d1 <- mean(impactUS$`H20 Withdrawal`,na.rm=TRUE)
 d2 <- mean(impactUS$`Land Below`,na.rm=TRUE)
 
-country <- c('China','Germany','India','United States')
-avgNaturalDisasters <- c(a,b,c,d)
-avgH20Withdrawal <- c(a1,b1,c1,d1)
-avgLandBelow <- c(a2,b2,c2,d2)
+impactJapan <- filter(impact, `Country name` %in% c("Japan"))
+e <- mean(impactJapan$`Natural Disasters`,na.rm=TRUE)
+e1 <- mean(impactJapan$`H20 Withdrawal`,na.rm=TRUE)
+e2 <- mean(impactJapan$`Land Below`,na.rm=TRUE)
+
+impactRussia <- filter(impact, `Country name` %in% c("Russian Federation"))
+f <- mean(impactRussia$`Natural Disasters`,na.rm=TRUE)
+f1 <- mean(impactRussia$`H20 Withdrawal`,na.rm=TRUE)
+f2 <- mean(impactRussia$`Land Below`,na.rm=TRUE)
+
+impactKorea <- filter(impact, `Country name` %in% c("Korea, Dem. Rep."))
+g <- mean(impactKorea$`Natural Disasters`,na.rm=TRUE)
+g1 <- mean(impactKorea$`H20 Withdrawal`,na.rm=TRUE)
+g2 <- mean(impactKorea$`Land Below`,na.rm=TRUE)
+
+impactIran <- filter(impact, `Country name` %in% c("Iran, Islamic Rep."))
+h <- mean(impactIran$`Natural Disasters`,na.rm=TRUE)
+h1 <- mean(impactIran$`H20 Withdrawal`,na.rm=TRUE)
+h2 <- mean(impactIran$`Land Below`,na.rm=TRUE)
+
+country <- c('China','Germany','India','United States','Japan','Russian Federation','Korea, Dem. Rep.','Iran, Islamic Rep.')
+avgNaturalDisasters <- c(a,b,c,d,e,f,g,h)
+avgH20Withdrawal <- c(a1,b1,c1,d1,e1,f1,g1,h1)
+avgLandBelow <- c(a2,b2,c2,d2,e2,f2,g2,h2)
 
 envirImpact <- data.frame(country, avgNaturalDisasters, avgH20Withdrawal, avgLandBelow)
 envirImpact <- envirImpact %>% rowwise() %>% 
   mutate(total = sum(c(avgNaturalDisasters, avgH20Withdrawal, avgLandBelow))) %>% 
   summarize(country, avgNaturalDisasters, avgH20Withdrawal, avgLandBelow, total)
 
-lbls <- c('China','Germany','India','United States')
+lbls <- c('China','Germany','India','United States','Japan','Russian Federation','Korea, Dem. Rep.','Iran, Islamic Rep.')
 pct <- round(envirImpact$total/sum(envirImpact$total)*100)
 lbls <- paste(lbls, pct) # add percents to labels
 lbls <- paste(lbls,"%",sep="") # ad % to labels
 pie(envirImpact$total,labels = lbls, col=rainbow(length(lbls)),
     main="Pie Chart of Countries")
-
 
 
 #How does gas emissions affect GDP?
