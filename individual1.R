@@ -48,14 +48,60 @@ data1 <- test %>% group_by(`Country name`) %>%
 datSig <- filter(data1, `Country name` %in% c("China", "Germany", "India", "Iran, Islamic Rep.", 
                                             "Japan", "Korea, Dem. Rep.", "Russian Federation", 
                                             "United States"))
+#datSig <- as.numeric(as.character(datSig$year))
+
+ggplot(datSig, aes(x=population, y=GDP, colour = `Country name`, group = `Country name`)) + geom_point()+ 
+  geom_line()
+
+######EXPERIMENTING -- IRRELEVANT
+# Summarize the median gdpPercap by year & continent, save as by_year_continent
+#by_year_country <- datSig %>%
+ # group_by(year,`Country name`) %>%
+  #mutate(population = as.numeric(population)) %>% 
+  #summarize(medianGdpPercap = median(GDP), avgPopulation = mean(population,na.rm=TRUE))
+
+#by_year_country <- by_year_country %>% mutate(avgPopulation = as.numeric(avgPopulation)) %>%
+ # mutate(medianGdpPercap = as.numeric(medianGdpPercap))
+  
+
+######EXPERIMENTING -- IRRELEVANT
+# Create a line plot showing the change in medianGdpPercap by continent over time #group = 1
+#phf <- ggplot(by_year_country, aes(x = year, y = medianGdpPercap, color = `Country name`, group=`Country name`)) + 
+ # geom_point() + geom_line() + scale_y_continuous(
+  #  "medianGDP", 
+   # sec.axis = sec_axis(~ . * 1.20, name = "avgPopulation"))
+#expand_limits(y = 0)
 
 
-#ggplot(datSig, aes(x=population, y=GDP, color = year)) + 
- # geom_point() + facet_wrap(~`Country name`)
+
+#####IGNORE
+#coeff <- 10
+#temperatureColor <- "#69b3a2"
+
+#ggplot(by_year_country, aes(x=year)) + 
+  #geom_line( aes(y=medianGdpPercap)) + 
+ # geom_bar( aes(y=medianGdpPercap), stat="identity", size=.1, fill=temperatureColor, color="black", alpha=.4) + 
+  #geom_line( aes(y=avgPopulation / coeff)) + # Divide by 10 to get the same range than the temperature
+  
+  # Custom the Y scales:
+  #scale_y_continuous(
+    # Features of the first axis
+   # name = "First Axis",
+    # Add a second axis and specify its features
+    #sec.axis = sec_axis(~.*coeff, name="Second Axis")
+#  ) 
 
 
 
-ggplot(datSig, aes(x=population, y=GDP)) + geom_point() + facet_wrap(~`Country name`)
+#alternative graph -- prob not going to be the best
+ggplot(datSig, aes(x=population, y=GDP, colour = `Country name`, group = `Country name`)) + geom_point()+ 
+  geom_line()
+ggplot(datSig, aes(x=GDP, y=population, colour = `Country name`, group = `Country name`)) + geom_point()+ 
+  geom_line()
+
+#+ facet_wrap(~`Country name`)
+#ggplot(datSig, aes(x=population, y=GDP)) + geom_point() + facet_wrap(~`Country name`)
+
 
 
 
@@ -215,5 +261,5 @@ effect <- na.omit(effect)                           # Apply na.omit function
 #multiple graphs in one figure
 ggplot(effect, aes(x=gas_emission, y=GDP)) + geom_point() + facet_wrap(~Country_Name, scales="free") + 
   labs(x="Gas Emissions (KtCO2)", y="GDP", title="GDP Vs. Gas Emissions from 1990-2011") + 
-  theme(axis.text.x = element_text(angle = 90)) + geom_smooth(method="lm") 
+  theme(axis.text.x = element_text(angle = 90))
 

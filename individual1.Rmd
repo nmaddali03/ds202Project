@@ -29,6 +29,44 @@ series <- readxl::read_xlsx('ClimateChange.xlsx', sheet='Series')
 data <- na_if(data, '..')
 ```
 
+
+**4.) How does population growth affect GDP?**
+
+**Variable utilized:**
+<br />
+SP.POP.GROW = Population growth (annual %)
+<br />
+NY.GDP.MKTP.CD = GDP($)
+```{r warning=FALSE}
+pop <- data %>% filter(`Series code` == 'SP.POP.TOTL') %>% 
+  summarize(`Country name`, `Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
+            `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
+            `2008`,`2009`,`2010`,`2011`)
+
+pop<-melt(pop, id.vars=c("Country name", "Series code"))
+
+gdp <- data %>% filter(`Series code` == 'NY.GDP.MKTP.CD') %>% 
+  summarize(`Country name`, `Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
+            `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
+            `2008`,`2009`,`2010`,`2011`)
+
+gdp<-melt(gdp, id.vars=c("Country name", "Series code"))
+
+test <- pop %>% inner_join(gdp %>% select("Country name",`Series code`,`variable`,`value`), 
+                           by=c("Country name","variable"))
+test <- na.omit(test)                           # Apply na.omit function
+
+
+data1 <- test %>% group_by(`Country name`) %>%
+  summarize(`Country name`, "year" = `variable`, "population" = `value.x`, "GDP"=`value.y`)
+
+datSig <- filter(data1, `Country name` %in% c("China", "Germany", "India", "Iran, Islamic Rep.", 
+                                            "Japan", "Korea, Dem. Rep.", "Russian Federation", 
+                                            "United States"))
+ggplot(datSig, aes(x=population, y=GDP, colour = `Country name`, group = `Country name`)) + geom_point()+ geom_line()
+```
+
+
 **5.) Which country has the most environmental impact from climate change in the time period 1990-2011?**
 
 **Variable utilized:**
