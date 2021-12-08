@@ -1,6 +1,6 @@
 ---
 title: "Project Report"
-author: "Arlena Wang"
+author: "Arlena Wang and Neha Maddali"
 date: "12/7/2021"
 output: html_document
 ---
@@ -111,9 +111,198 @@ The figure shows a general positive relationship between total population and am
 
 **3.) How does GDP affect amount of gas emissions?**
 
+**Variable utilized:**
+EN.ATM.CO2E.KT = CO2 emissions, total (KtCO2)
+NY.GDP.MKTP.CD = GDP($)
+```{r warning=FALSE}
+gas <- data %>% filter(`Series code` == 'EN.ATM.CO2E.KT') %>% 
+  summarize(Country_Name =`Country name`, Series_Code =`Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
+            `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
+            `2008`,`2009`,`2010`,`2011`)
+gas<-melt(gas, id.vars=c("Country_Name", "Series_Code"))
+gas <- gas %>%
+  group_by(Country_Name) %>%
+  summarize(Country_Name,Series_Code, year=`variable`,gas_emission=`value`)
+gas$Series_Code <- NULL
+
+gassignificant <- filter(gas, Country_Name %in% c("China", "Germany", "India", 
+                                                  "Iran, Islamic Rep.", "Japan", 
+                                                  "Korea, Dem. Rep.", "Russian Federation", 
+                                                  "United States"))
+
+gdp <- data %>% filter(`Series code` == 'NY.GDP.MKTP.CD') %>% 
+  summarize(`Country name`, `Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
+            `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
+            `2008`,`2009`,`2010`,`2011`)
+gdp<-melt(gdp, id.vars=c("Country name", "Series code"))
+gdp <- gdp %>%
+  group_by(`Country name`) %>%
+  summarize(Country_Name=`Country name`,`Series code`, year=`variable`,GDP=`value`)
+gdp$`Series code` <- NULL
+gdp$`Country name` <- NULL
+
+gdpSig <- filter(gdp, Country_Name %in% c("China", "Germany", "India", "Iran, Islamic Rep.", "Japan", "Korea, Dem. Rep.", "Russian Federation", "United States"))
+
+effect <- gdpSig %>%
+  inner_join(gassignificant %>%
+               select(Country_Name, year, gas_emission),
+             by=c("Country_Name", "year"))
+effect <- na.omit(effect)                           # Apply na.omit function
+
+#multiple graphs in one figure
+ggplot(effect, aes(x=gas_emission, y=GDP)) + geom_point() + facet_wrap(~Country_Name, scales="free") + 
+  labs(x="Gas Emissions (KtCO2)", y="GDP", title="GDP Vs. Gas Emissions from 1990-2011") + 
+  theme(axis.text.x = element_text(angle = 90)) + geom_smooth(method="lm") 
+```
+The figure shows a general positive relationship between GDP in dollars and the amount of gas emissions, although there are some outliers. Essentially suggesting that a growing per capita GDP leads to increasing carbon dioxide emissions. Germany is the only country that shows a decreasing trend of these two variables. India, China, and the United States show very interesting trends. China has a large jump in the time frame of 1995-2000. India as well has the large jump between 1999-2001. This could be due to a number of factors such as change in income based on population. And although the United States doesn't show a significantly visible positive correlation, the general trend line would be positive. Overall, economic growth exerts a significant positive effect on greenhouse gases.
+
 **4.) How does population growth affect GDP?**
 
+**Variable utilized:**
+<br />
+SP.POP.GROW = Population growth (annual %)
+<br />
+NY.GDP.MKTP.CD = GDP($)
+```{r warning=FALSE}
+pop <- data %>% filter(`Series code` == 'SP.POP.TOTL') %>% 
+  summarize(`Country name`, `Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
+            `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
+            `2008`,`2009`,`2010`,`2011`)
+
+pop<-melt(pop, id.vars=c("Country name", "Series code"))
+
+gdp <- data %>% filter(`Series code` == 'NY.GDP.MKTP.CD') %>% 
+  summarize(`Country name`, `Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
+            `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
+            `2008`,`2009`,`2010`,`2011`)
+
+gdp<-melt(gdp, id.vars=c("Country name", "Series code"))
+
+test <- pop %>% inner_join(gdp %>% select("Country name",`Series code`,`variable`,`value`), 
+                           by=c("Country name","variable"))
+test <- na.omit(test)                           # Apply na.omit function
+
+
+data1 <- test %>% group_by(`Country name`) %>%
+  summarize(`Country name`, "year" = `variable`, "population" = `value.x`, "GDP"=`value.y`)
+
+datSig <- filter(data1, `Country name` %in% c("China", "Germany", "India", "Iran, Islamic Rep.", 
+                                            "Japan", "Korea, Dem. Rep.", "Russian Federation", 
+                                            "United States"))
+ggplot(datSig, aes(x=population, y=GDP, colour = `Country name`, group = `Country name`)) + geom_point()+ geom_line() +labs(x="Population Growth (annual %)", y="GDP ($)", title="GDP Vs. Population from 1990-2011")
+```
+From the figure, an increase in population has a positive correlation with GDP. There were a few significant jumps in data points for some countries like India, China, Iran/Islamic Rep., and the United States. This could've been caused by some N/A or 0 values where no significant data was recorded for that year. In general, labour is a factor of production and with an increase in the labour force, due to population growth, the total output may increase causing the GDP to increase.
+
 **5.) Which country has the most environmental impact from climate change in the time period 1990-2011?**
+
+**Variable utilized:**
+<br />
+EN.CLC.MDAT.ZS = Droughts, floods, extreme temps (% pop. avg. 1990-2009)
+<br />
+ER.H2O.FWTL.ZS = Annual freshwater withdrawals (% of internal resources)
+<br />
+AG.LND.EL5M.ZS = Land area below 5m (% of land area)
+
+```{r warning=FALSE}
+disaster <- data %>% filter(`Series code` == 'EN.CLC.MDAT.ZS') %>% 
+  summarize(`Country name`, `Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
+            `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
+            `2008`,`2009`,`2010`,`2011`)
+disaster<-melt(disaster, id.vars=c("Country name", "Series code"))
+
+disaster <- filter(disaster, `Country name` %in% c("China", "Germany", "India", 
+                                                  "Iran, Islamic Rep.", "Japan", 
+                                                  "Korea, Dem. Rep.", "Russian Federation", 
+                                                  "United States"))
+h2oWithdraw <- data %>% filter(`Series code` == 'ER.H2O.FWTL.ZS') %>% 
+  summarize(`Country name`, `Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
+            `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
+            `2008`,`2009`,`2010`,`2011`)
+h2oWithdraw<-melt(h2oWithdraw, id.vars=c("Country name", "Series code"))
+
+h2oWithdraw <- filter(h2oWithdraw, `Country name` %in% c("China", "Germany", "India", 
+                                                   "Iran, Islamic Rep.", "Japan", 
+                                                   "Korea, Dem. Rep.", "Russian Federation", 
+                                                   "United States"))
+landBelow <- data %>% filter(`Series code` == 'AG.LND.EL5M.ZS') %>% 
+  summarize(`Country name`, `Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
+            `1997`,`1998`,`1999`,`2000`,`2001`,`2002`,`2003`,`2004`,`2005`,`2006`,`2007`,
+            `2008`,`2009`,`2010`,`2011`)
+landBelow<-melt(landBelow, id.vars=c("Country name", "Series code"))
+
+landBelow <- filter(landBelow, `Country name` %in% c("China", "Germany", "India", 
+                                                         "Iran, Islamic Rep.", "Japan", 
+                                                         "Korea, Dem. Rep.", "Russian Federation", "United States"))
+
+impact <- disaster %>% inner_join(h2oWithdraw %>% select("Country name",`Series code`,`variable`,`value`), 
+                           by=c("Country name","variable"))
+impact <- impact %>% inner_join(landBelow %>% select("Country name",`Series code`,`variable`,`value`), 
+                                  by=c("Country name","variable"))
+impact <- impact %>% group_by(`Country name`) %>%
+  summarize(`Country name`, "year" = `variable`, "Natural Disasters" = `value.x`, 
+            "H20 Withdrawal"=`value.y`, "Land Below"=`value`) %>% 
+  mutate(`Natural Disasters` = as.numeric(`Natural Disasters`)) %>% 
+  mutate(`H20 Withdrawal` = as.numeric(`H20 Withdrawal`)) %>% 
+  mutate(`Land Below` = as.numeric(`Land Below`))
+
+impactChina <- filter(impact, `Country name` %in% c("China"))
+a <- mean(impactChina$`Natural Disasters`,na.rm=TRUE)
+a1 <- mean(impactChina$`H20 Withdrawal`,na.rm=TRUE)
+a2 <- mean(impactChina$`Land Below`,na.rm=TRUE)
+
+impactGermany <- filter(impact, `Country name` %in% c("Germany"))
+b <- mean(impactGermany$`Natural Disasters`,na.rm=TRUE)
+b1 <- mean(impactGermany$`H20 Withdrawal`,na.rm=TRUE)
+b2 <- mean(impactGermany$`Land Below`,na.rm=TRUE)
+
+impactIndia <- filter(impact, `Country name` %in% c("India"))
+c <- mean(impactIndia$`Natural Disasters`,na.rm=TRUE)
+c1 <- mean(impactIndia$`H20 Withdrawal`,na.rm=TRUE)
+c2 <- mean(impactIndia$`Land Below`,na.rm=TRUE)
+
+impactUS <- filter(impact, `Country name` %in% c("United States"))
+d <- mean(impactUS$`Natural Disasters`,na.rm=TRUE)
+d1 <- mean(impactUS$`H20 Withdrawal`,na.rm=TRUE)
+d2 <- mean(impactUS$`Land Below`,na.rm=TRUE)
+
+impactJapan <- filter(impact, `Country name` %in% c("Japan"))
+e <- mean(impactJapan$`Natural Disasters`,na.rm=TRUE)
+e1 <- mean(impactJapan$`H20 Withdrawal`,na.rm=TRUE)
+e2 <- mean(impactJapan$`Land Below`,na.rm=TRUE)
+
+impactRussia <- filter(impact, `Country name` %in% c("Russian Federation"))
+f <- mean(impactRussia$`Natural Disasters`,na.rm=TRUE)
+f1 <- mean(impactRussia$`H20 Withdrawal`,na.rm=TRUE)
+f2 <- mean(impactRussia$`Land Below`,na.rm=TRUE)
+
+impactKorea <- filter(impact, `Country name` %in% c("Korea, Dem. Rep."))
+g <- mean(impactKorea$`Natural Disasters`,na.rm=TRUE)
+g1 <- mean(impactKorea$`H20 Withdrawal`,na.rm=TRUE)
+g2 <- mean(impactKorea$`Land Below`,na.rm=TRUE)
+
+impactIran <- filter(impact, `Country name` %in% c("Iran, Islamic Rep."))
+h <- mean(impactIran$`Natural Disasters`,na.rm=TRUE)
+h1 <- mean(impactIran$`H20 Withdrawal`,na.rm=TRUE)
+h2 <- mean(impactIran$`Land Below`,na.rm=TRUE)
+
+country <- c('China','Germany','India','United States','Japan','Russian Federation','Korea, Dem. Rep.','Iran, Islamic Rep.')
+avgNaturalDisasters <- c(a,b,c,d,e,f,g,h)
+avgH20Withdrawal <- c(a1,b1,c1,d1,e1,f1,g1,h1)
+avgLandBelow <- c(a2,b2,c2,d2,e2,f2,g2,h2)
+
+envirImpact <- data.frame(country, avgNaturalDisasters, avgH20Withdrawal, avgLandBelow)
+envirImpact <- envirImpact %>% rowwise() %>% 
+  mutate(total = sum(c(avgNaturalDisasters, avgH20Withdrawal, avgLandBelow))) %>% 
+  summarize(country, avgNaturalDisasters, avgH20Withdrawal, avgLandBelow, total)
+
+lbls <- c('China','Germany','India','United States','Japan','Russian Federation','Korea, Dem. Rep.','Iran, Islamic Rep.')
+pct <- round(envirImpact$total/sum(envirImpact$total)*100)
+lbls <- paste(lbls, pct) # add percents to labels
+lbls <- paste(lbls,"%",sep="") # ad % to labels
+pie(envirImpact$total,labels = lbls, col=rainbow(length(lbls)),
+    main="Pie Chart of Countries")
+```
+For this question, the following variables were used: EN.CLC.MDAT.ZS which is droughts, floods, extreme temps (% pop. avg), ER.H2O.FWTL.ZS which is Annual freshwater withdrawals (% of internal resources), and AG.LND.EL5M.ZS which is Land area below 5m (% of land area). After transposing the data for these specific cateogies and calculating a total value of these impacts, the figure shows that Iran/Islamic Rep was the most impacted from climate change. India is the next with highest impact. This data and finding correlates with that of what is currently being researched and reported. Iran has been heavily impacted by climate change. It has reduced their rainfall per annum and the inflow of water into rivers has reduced by 40% which in turn affects agriculture, industrial and drinking water. Similarly, India is experiencing increasing heat waves, droughts, and erratic rainfall events.
 
 **6.) How does the US gas emissions compare to other countries?**
 

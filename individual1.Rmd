@@ -182,7 +182,7 @@ pie(envirImpact$total,labels = lbls, col=rainbow(length(lbls)),
 
 
 
-**6.) How does gas emissions affect GDP?**
+**6.) How does GDP affect amount of gas emissions?**
 
 **Variable utilized:**
 EN.ATM.CO2E.KT = CO2 emissions, total (KtCO2)
