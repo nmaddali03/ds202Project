@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## R Markdown
 
 **1.) an introduction to background for the dataset**
-
+Climate change refers to long-term shifts in temperatures and weather patterns.  As this is a natural occurring problem, technologies from man-made inventions has driven this phenomenon to become a bigger problem more quickly.  The burning of fossil fuels, such as coal, oil, and gas, for our technologies, produces heat-trapping gases.  The dataset, "Climate Change," investigates many aspects and statistics of countries around the world.  In order to find the countries that have the most impact on climate change, gas emissions, population, environmental factors, and GDP will be explored as these are the main factors that play a role in society which lead to the causes of global warming.
 **2.) how you obtained the data**
 The dataset was obtained from the website, [climate change](https://datacatalog.worldbank.org/search/dataset/0040205). This dataset includes information about climate change and was collected from the Climate Change Knowledge Portal and World Development indicators.  The data includes greenhouse gas emissions, energy consumption, and more from the time period 1990-2011. The dataset has three different sheets: Data, Country, Series. Data all the relevant data for climate change collected for the years 1990-2011. Country has a list of all the countries data has been collected on. Series has a summary of the different abbreviations for the types of data (essentially a data code book). It provides explanation and sources to each of the categories of data collected for further research to benefit analysis.
 
