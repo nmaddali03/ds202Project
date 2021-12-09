@@ -32,6 +32,29 @@ Climate change refers to long-term shifts in temperatures and weather patterns. 
 **Dataset**
 The dataset was obtained from the website, [climate change](https://datacatalog.worldbank.org/search/dataset/0040205). This dataset includes information about climate change and was collected from the Climate Change Knowledge Portal and World Development indicators.  The data includes greenhouse gas emissions, energy consumption, and more from the time period 1990-2011. The dataset has three different sheets: Data, Country, Series. Data all the relevant data for climate change collected for the years 1990-2011. Country has a list of all the countries data has been collected on. Series has a summary of the different abbreviations for the types of data (essentially a data code book). It provides explanation and sources to each of the categories of data collected for further research to benefit analysis.
 
+# Libraries
+```{r}
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(ggrepel)
+library(lubridate)
+library(reshape2)
+```
+
+#import the data
+```{r warning=FALSE}
+data <- readxl::read_xlsx('ClimateChange.xlsx', sheet='Data')
+country <- readxl::read_xlsx('ClimateChange.xlsx', sheet='Country')
+series <- readxl::read_xlsx('ClimateChange.xlsx', sheet='Series')
+```
+
+#change the ".." cells in the years to n/a
+```{r}
+data <- na_if(data, '..')
+```
+
 ## Data Analysis Exploration
 
 **1.) What was the population growth/change over the time period 1990-2011?**
@@ -63,7 +86,7 @@ The figure shows a general decrease in population growth for annual percentage a
 
 **2.) Does the amount of gas emissions affect the total population?**
 
-**Variable utilized:**
+**Variables utilized:**
 EN.ATM.CO2E.KT = CO2 emissions, total (KtCO2)
 SP.POP.TOTL= total population
 
@@ -111,9 +134,10 @@ The figure shows a general positive relationship between total population and am
 
 **3.) How does GDP affect amount of gas emissions?**
 
-**Variable utilized:**
+**Variables utilized:**
 EN.ATM.CO2E.KT = CO2 emissions, total (KtCO2)
 NY.GDP.MKTP.CD = GDP($)
+
 ```{r warning=FALSE}
 gas <- data %>% filter(`Series code` == 'EN.ATM.CO2E.KT') %>% 
   summarize(Country_Name =`Country name`, Series_Code =`Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
@@ -154,15 +178,17 @@ ggplot(effect, aes(x=gas_emission, y=GDP)) + geom_point() + facet_wrap(~Country_
   labs(x="Gas Emissions (KtCO2)", y="GDP", title="GDP Vs. Gas Emissions from 1990-2011") + 
   theme(axis.text.x = element_text(angle = 90)) + geom_smooth(method="lm") 
 ```
+
 The figure shows a general positive relationship between GDP in dollars and the amount of gas emissions, although there are some outliers. Essentially suggesting that a growing per capita GDP leads to increasing carbon dioxide emissions. Germany is the only country that shows a decreasing trend of these two variables. India, China, and the United States show very interesting trends. China has a large jump in the time frame of 1995-2000. India as well has the large jump between 1999-2001. This could be due to a number of factors such as change in income based on population. And although the United States doesn't show a significantly visible positive correlation, the general trend line would be positive. Overall, economic growth exerts a significant positive effect on greenhouse gases.
 
 **4.) How does population growth affect GDP?**
 
-**Variable utilized:**
+**Variables utilized:**
 <br />
 SP.POP.GROW = Population growth (annual %)
 <br />
 NY.GDP.MKTP.CD = GDP($)
+
 ```{r warning=FALSE}
 pop <- data %>% filter(`Series code` == 'SP.POP.TOTL') %>% 
   summarize(`Country name`, `Series code`,`1990`,`1991`,`1992`,`1993`,`1994`,`1995`,`1996`,
@@ -191,11 +217,12 @@ datSig <- filter(data1, `Country name` %in% c("China", "Germany", "India", "Iran
                                             "United States"))
 ggplot(datSig, aes(x=population, y=GDP, colour = `Country name`, group = `Country name`)) + geom_point()+ geom_line() +labs(x="Population Growth (annual %)", y="GDP ($)", title="GDP Vs. Population from 1990-2011")
 ```
+
 From the figure, an increase in population has a positive correlation with GDP. There were a few significant jumps in data points for some countries like India, China, Iran/Islamic Rep., and the United States. This could've been caused by some N/A or 0 values where no significant data was recorded for that year. In general, labour is a factor of production and with an increase in the labour force, due to population growth, the total output may increase causing the GDP to increase.
 
 **5.) Which country has the most environmental impact from climate change in the time period 1990-2011?**
 
-**Variable utilized:**
+**Variables utilized:**
 <br />
 EN.CLC.MDAT.ZS = Droughts, floods, extreme temps (% pop. avg. 1990-2009)
 <br />
@@ -302,6 +329,7 @@ lbls <- paste(lbls,"%",sep="") # ad % to labels
 pie(envirImpact$total,labels = lbls, col=rainbow(length(lbls)),
     main="Pie Chart of Countries")
 ```
+
 For this question, the following variables were used: EN.CLC.MDAT.ZS which is droughts, floods, extreme temps (% pop. avg), ER.H2O.FWTL.ZS which is Annual freshwater withdrawals (% of internal resources), and AG.LND.EL5M.ZS which is Land area below 5m (% of land area). After transposing the data for these specific cateogies and calculating a total value of these impacts, the figure shows that Iran/Islamic Rep was the most impacted from climate change. India is the next with highest impact. This data and finding correlates with that of what is currently being researched and reported. Iran has been heavily impacted by climate change. It has reduced their rainfall per annum and the inflow of water into rivers has reduced by 40% which in turn affects agriculture, industrial and drinking water. Similarly, India is experiencing increasing heat waves, droughts, and erratic rainfall events.
 
 **6.) How does the US gas emissions compare to other countries?**
@@ -327,7 +355,7 @@ gassignificant <- filter(gas, Country_Name %in% c("China", "Germany", "India", "
 
 ggplot(gassignificant, aes(x=year, y=gas_emission)) + geom_bar(stat="identity") + facet_wrap(~Country_Name, scales="free") + labs(x="Year", y="Gas Emissions (KtCO2)", title="Gas Emissions from 1990-2011") + theme(axis.text.x = element_text(angle = 90))
 ```
-This figure shows only the most relevant countries with larger quantities of gas emission.  This includes China, Germany, India, Iran, Islamic Republic, Japan, Korea, Democratic Republic, Russian Federation, and the United States.
+This figure shows only the most relevant countries with larger quantities of gas emission.  This includes China, Germany, India, Iran, Islamic Republic, Japan, Korea, Democratic Republic, Russian Federation, and the United States which was found by further research that was done.
 
 It seems that US has the second most gas emissions as it also has an increasing value of gas emissions over the years with its highest value at 5461013.74 million metric tons of CO2.  This may be due the amount of transportation, electricity, industry, and agriculture that is present in the US.  There are some fluctuations that can be due to changes in economy, price of fuel, and other factors.  Overall, it follows a similar trend to other countries as there is a positive relationship between year and amount of gas emissions.  
 
@@ -339,7 +367,7 @@ EN.ATM.CO2E.KT = CO2 emissions, total (KtCO2)
 Looking at the same figure above, as climate change is mainly caused by gas emissions, from years 1990 to 2011, China has contributed the most towards climate change based on the provided figure.  When looking at the figure, China has an increasing gas emission value as years pass with the highest gas emission in 2008, at 7031916.21 million metric tons of CO2.  This presents relevant information as China maintains a very large infrastructure development which emits a large amount of CO2 during the refining process.  Many construction-related activities from this cause the CO2 emissions.
 
 **Conclusion**
-As previously mentioned, there were quite a few empty values for some of the variables throughout the years. We didn’t want to consider these values as 0 because they could’ve simply not have been any data to collect for that year. More specifically, the major questions we were looking into were which countries caused the most impact towards climate change and which countries were most affected by climate change. From looking at specific variables like population growth, total population, GDP and total CO2 emissions, we found that significant contributors to climate change factors were China and the United States. For looking at variables like droughts, floods, extreme temps, annual freshwater withdrawals, land area below 5m we found that the countries that were most impacted from climate change factors were Iran/Islamic Rep. and India. Other conclusions made were that population growth leads to an increase in GDP which in turn leads to an increase in gas emissions and gas emissions are one of the main causes of climate change. 
+As previously mentioned, there were quite a few empty values for some of the variables throughout the years. We didn’t want to consider these values as 0 because they could’ve simply not have been any data to collect for that year. More specifically, the major questions we were looking into were which countries caused the most impact towards climate change and which countries were most affected by climate change. From looking at specific variables like population growth, total population, GDP and total CO2 emissions, we found that significant contributors to climate change factors were China and the United States. For looking at variables like droughts, floods, extreme temperatures, annual freshwater withdrawals, land area below 5m we found that the countries that were most impacted from climate change factors were Iran, Islamic Rep. and India. Other conclusions made were that population growth leads to an increase in GDP which in turn leads to an increase in gas emissions and gas emissions are one of the main causes of climate change. 
 
 
 **Contribution Statements**
