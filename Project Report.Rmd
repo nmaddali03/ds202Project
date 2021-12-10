@@ -12,9 +12,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Climate Change Dataset Analysis Project Report
 
 **Description of Background**
+<br />
 Climate change refers to long-term shifts in temperatures and weather patterns.  As this is a natural occurring problem, technologies from man-made inventions has driven this phenomenon to become a bigger problem more quickly.  The burning of fossil fuels, such as coal, oil, and gas, for our technologies, produces heat-trapping gases.  The dataset, "Climate Change," investigates many aspects and statistics of countries around the world.  In order to find the countries that have the most impact on climate change, gas emissions, population, environmental factors, and GDP will be explored as these are the main factors that play a role in society which lead to the causes of global warming.
 
 **Questions Raised**
+<br />
 *What was the population growth/change over the time period 1990-2011 in the US? 
 
 *Does the amount of gas emissions affect the total population? 
@@ -30,6 +32,7 @@ Climate change refers to long-term shifts in temperatures and weather patterns. 
 *Which country had the most cause/impact towards climate change from 1990-2011? 
 
 **Dataset**
+<br />
 The dataset was obtained from the website, [climate change](https://datacatalog.worldbank.org/search/dataset/0040205). This dataset includes information about climate change and was collected from the Climate Change Knowledge Portal and World Development indicators.  The data includes greenhouse gas emissions, energy consumption, and more from the time period 1990-2011. The dataset has three different sheets: Data, Country, Series. Data all the relevant data for climate change collected for the years 1990-2011. Country has a list of all the countries data has been collected on. Series has a summary of the different abbreviations for the types of data (essentially a data code book). It provides explanation and sources to each of the categories of data collected for further research to benefit analysis.
 
 # Libraries
@@ -56,7 +59,8 @@ series <- readxl::read_xlsx('ClimateChange.xlsx', sheet='Series')
 data <- na_if(data, '..')
 ```
 
-##Cleaning Data and Challenges
+## Cleaning Data and Challenges
+<br />
 Cleaning the data was a big challenge. There were several null values and columns and rows that needed to be reorganized. It is assumed that these null values could just be due to the fact that there was no data to collect for that variable or there was no form of collection done.  For example, many rows and columns needed to be separated and transposed in order to do data analysis.  For example, we transposed the year columns into rows containing the valued data for the specific variable. In addition, this dataset was very large which requires the program, r, to use a lot of time to load for graphics for exploratory analysis. Thus, many graphs only analyzed main countries and values.
 
 
@@ -65,6 +69,7 @@ Cleaning the data was a big challenge. There were several null values and column
 **1.) What was the population growth/change over the time period 1990-2011?**
 
 **Variable utilized:**
+<br />
 SP.POP.GROW=population growth (annual %)
 
 ```{r}
@@ -92,12 +97,14 @@ ggplot(popsignificant, aes(x=year, y=population)) + geom_point() + facet_wrap(~C
 
 ```
 
-The figure shows a general decrease in population growth for annual percentage as years increase from 1990 to 2011.  While this may be coincidental, it may be due to problems that are caused by climate change.
+After transposing the data specific for the population growth variable, a facet wrap graph of scatter plots were created for the top 8 countries of China, Germany, India, Iran/Islamic Rep, Japan, Korea(Dem, Rep), Russian Federation, and the United States. The figure shows a general decrease in population growth for annual percentage as years increase from 1990 to 2011 following the 0-21 scale on the x-axis. While this may be coincidental, it may be due to problems that are caused by climate change. 
 
 **2.) Does the amount of gas emissions affect the total population?**
 
 **Variables utilized:**
+<br />
 EN.ATM.CO2E.KT = CO2 emissions, total (KtCO2)
+<br />
 SP.POP.TOTL= total population
 
 ```{r}
@@ -143,12 +150,14 @@ effect$gas_emission <- as.numeric(effect$gas_emission)
 ggplot(effect, aes(x=Total_population, y=gas_emission)) + geom_point() + facet_wrap(~Country_Name, scales="free") + labs(x="Gas Emissions (KtCO2)", y="Total Population", title="Gas Emissions Vs. Total Population from 1990-2011") + theme(axis.text.x = element_text(angle = 90))
 ```
 
-The figure shows a general positive relationship between total population and amount of gas emissions.  The Russian Federation shows a decrease then increase in amount of gas emissions.  Germany had a general decrease between total population and gas emissions.  Germany and the Russian Federation may be trying to significantly reduce their fuel emissions.  The general pattern of an increase in population correlates with an increase in gas emissions for most countries.  This is due to more people causing more activity and fuel consumption which leads to more gas emissions.
+After transposing the data for the variables of gas emissions and total population, a similar graph to the previous one was created. The figure shows a general positive relationship between total population and amount of gas emissions.  The Russian Federation shows a slight decrease then increase in amount of gas emissions.  Germany had a general slow decrease between total population and gas emissions.  Germany may be trying to significantly reduce their fuel emissions.  Korea had a large dip halfway through the years of 1990-2011. Korea could also be trying to significantly reduce their fuel emissions. However, the general pattern of an increase in population correlates with an increase in gas emissions for most countries.  This is due to more people causing more activity and fuel consumption which leads to more gas emissions.
 
 **3.) How does GDP affect amount of gas emissions?**
 
 **Variables utilized:**
+<br />
 EN.ATM.CO2E.KT = CO2 emissions, total (KtCO2)
+<br />
 NY.GDP.MKTP.CD = GDP($)
 
 ```{r warning=FALSE}
@@ -196,7 +205,7 @@ ggplot(effect, aes(x=gas_emission, y=GDP)) + geom_point() + facet_wrap(~Country_
   theme(axis.text.x = element_text(angle = 90)) + geom_smooth(method="lm") 
 ```
 
-The figure shows a general positive relationship between GDP in dollars and the amount of gas emissions, although there are some outliers. Essentially suggesting that a growing per capita GDP leads to increasing carbon dioxide emissions. Germany is the only country that shows a decreasing trend of these two variables. India, China, and the United States show very interesting trends. China has a large jump in the time frame of 1995-2000. India as well has the large jump between 1999-2001. This could be due to a number of factors such as change in income based on population. And although the United States doesn't show a significantly visible positive correlation, the general trend line would be positive. Overall, economic growth exerts a significant positive effect on greenhouse gases.
+After transposing the data for the variables of gas emissions and GDP, a similar figure was created with an addition of trendlines. The figure shows a general positive relationship between GDP in dollars and the amount of gas emissions, although there are some outliers. Essentially suggesting that a growing per capita GDP leads to increasing carbon dioxide emissions. Germany is the only country that shows more of a decreasing trend of these two variables. The Russian Federation is similar to Germany in the sense the trendline shows a very horizontal, stable correlation. This could be due to a number of factors like no change in income based on population. India, China, and the United States show very strong positive trends. This strong positive correlation could be due to a number of factors such as a increase in income based on population. Additionally, Korea was not included in this figure as there were absolutely no values given for the time frame of 1990-2011. The data could not have been collected or there was not any data to collect at all during the time period. Overall, economic growth exerts a significant positive effect on greenhouse gases.
 
 **4.) How does population growth affect GDP?**
 
