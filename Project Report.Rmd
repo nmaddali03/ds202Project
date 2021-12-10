@@ -41,6 +41,7 @@ library(dplyr)
 library(ggrepel)
 library(lubridate)
 library(reshape2)
+library(scales)
 ```
 
 #import the data
@@ -54,6 +55,10 @@ series <- readxl::read_xlsx('ClimateChange.xlsx', sheet='Series')
 ```{r}
 data <- na_if(data, '..')
 ```
+
+##Cleaning Data and Challenges
+Cleaning the data was a big challenge. There were several null values and columns and rows that needed to be reorganized. It is assumed that these null values could just be due to the fact that there was no data to collect for that variable or there was no form of collection done.  For example, many rows and columns needed to be separated and transposed in order to do data analysis.  For example, we transposed the year columns into rows containing the valued data for the specific variable. In addition, this dataset was very large which requires the program, r, to use a lot of time to load for graphics for exploratory analysis. Thus, many graphs only analyzed main countries and values.
+
 
 ## Data Analysis Exploration
 
@@ -79,7 +84,12 @@ pop$`Country name` <- NULL
 
 popsignificant <- filter(pop, Country_Name %in% c("China", "Germany", "India", "Iran, Islamic Rep.", "Japan", "Korea, Dem. Rep.", "Russian Federation", "United States"))
 
-ggplot(popsignificant, aes(x=year, y=population)) + geom_point() + facet_wrap(~Country_Name) + labs(x="Year", y="Population Growth (annual %)", title="Population Growth from 1990-2011") + theme(axis.text.x = element_text(angle = 90)) 
+popsignificant$year <- as.numeric(popsignificant$year)
+popsignificant$population <- as.numeric(popsignificant$population)
+
+ggplot(popsignificant, aes(x=year, y=population)) + geom_point() + facet_wrap(~Country_Name) + labs(x="Year", y="Population Growth (annual %)", title="Population Growth from 1990-2011") + theme(axis.text.x = element_text(angle = 90))
+
+
 ```
 
 The figure shows a general decrease in population growth for annual percentage as years increase from 1990 to 2011.  While this may be coincidental, it may be due to problems that are caused by climate change.
@@ -127,6 +137,9 @@ effect <- totalpopsignificant %>%
           select(Country_Name, year, gas_emission),
           by=c("Country_Name", "year"))
 
+effect$Total_population <- as.numeric(effect$Total_population)
+effect$gas_emission <- as.numeric(effect$gas_emission)
+
 ggplot(effect, aes(x=Total_population, y=gas_emission)) + geom_point() + facet_wrap(~Country_Name, scales="free") + labs(x="Gas Emissions (KtCO2)", y="Total Population", title="Gas Emissions Vs. Total Population from 1990-2011") + theme(axis.text.x = element_text(angle = 90))
 ```
 
@@ -173,6 +186,10 @@ effect <- gdpSig %>%
              by=c("Country_Name", "year"))
 effect <- na.omit(effect)                           # Apply na.omit function
 
+
+effect$gas_emission <- as.numeric(effect$gas_emission)
+effect$GDP <- as.numeric(effect$GDP)
+
 #multiple graphs in one figure
 ggplot(effect, aes(x=gas_emission, y=GDP)) + geom_point() + facet_wrap(~Country_Name, scales="free") + 
   labs(x="Gas Emissions (KtCO2)", y="GDP", title="GDP Vs. Gas Emissions from 1990-2011") + 
@@ -215,7 +232,11 @@ data1 <- test %>% group_by(`Country name`) %>%
 datSig <- filter(data1, `Country name` %in% c("China", "Germany", "India", "Iran, Islamic Rep.", 
                                             "Japan", "Korea, Dem. Rep.", "Russian Federation", 
                                             "United States"))
-ggplot(datSig, aes(x=population, y=GDP, colour = `Country name`, group = `Country name`)) + geom_point()+ geom_line() +labs(x="Population Growth (annual %)", y="GDP ($)", title="GDP Vs. Population from 1990-2011")
+
+datSig$population <- as.numeric(datSig$population)
+datSig$GDP <- as.numeric(datSig$GDP)
+
+ggplot(datSig, aes(x=population, y=GDP, colour = `Country name`, group = `Country name`)) + geom_point()+ geom_line() +labs(x="Population Growth (annual %)", y="GDP ($)", title="GDP Vs. Population Growth from 1990-2011")
 ```
 
 From the figure, an increase in population has a positive correlation with GDP. There were a few significant jumps in data points for some countries like India, China, Iran/Islamic Rep., and the United States. This could've been caused by some N/A or 0 values where no significant data was recorded for that year. In general, labour is a factor of production and with an increase in the labour force, due to population growth, the total output may increase causing the GDP to increase.
@@ -352,6 +373,10 @@ gas <- gas %>%
 gas$Series_Code <- NULL
 
 gassignificant <- filter(gas, Country_Name %in% c("China", "Germany", "India", "Iran, Islamic Rep.", "Japan", "Korea, Dem. Rep.", "Russian Federation", "United States"))
+
+
+gassignificant$year <- as.numeric(gassignificant$year)
+gassignificant$gas_emission <- as.numeric(gassignificant$gas_emission)
 
 ggplot(gassignificant, aes(x=year, y=gas_emission)) + geom_bar(stat="identity") + facet_wrap(~Country_Name, scales="free") + labs(x="Year", y="Gas Emissions (KtCO2)", title="Gas Emissions from 1990-2011") + theme(axis.text.x = element_text(angle = 90))
 ```
