@@ -245,10 +245,10 @@ datSig <- filter(data1, `Country name` %in% c("China", "Germany", "India", "Iran
 datSig$population <- as.numeric(datSig$population)
 datSig$GDP <- as.numeric(datSig$GDP)
 
-ggplot(datSig, aes(x=population, y=GDP, colour = `Country name`, group = `Country name`)) + geom_point()+ geom_line() +labs(x="Population Growth (annual %)", y="GDP ($)", title="GDP Vs. Population Growth from 1990-2011")
+ggplot(datSig, aes(x=population, y=GDP, colour = `Country name`, group = `Country name`)) + geom_line() + labs(x="Population Growth (annual %)", y="GDP ($)", title="GDP Vs. Population Growth from 1990-2011")
 ```
 
-From the figure, an increase in population has a positive correlation with GDP. There were a few significant jumps in data points for some countries like India, China, Iran/Islamic Rep., and the United States. This could've been caused by some N/A or 0 values where no significant data was recorded for that year. In general, labour is a factor of production and with an increase in the labour force, due to population growth, the total output may increase causing the GDP to increase.
+After transposing the data for GDP and population growth, a line graph of the significant countries was made. From the figure, an increase in population has a positive correlation with GDP. Iran in the bottom left corner had data that was significantly closer to each other. India, China, and the United States have significant positive correlations between population growth and GDP. Germany, Japan, and the Russian Federation showed an increase in GDP with slight changes in the population, either decreasing or increasing. This could just be because there is not much population growth occuring in these countries, indicating that GDP grows at it's own rate regardless on population growth. In general, labour is a factor of production and with an increase in the labour force, due to population growth, the total output may increase causing the GDP to increase.
 
 **5.) Which country has the most environmental impact from climate change in the time period 1990-2011?**
 
@@ -359,12 +359,13 @@ lbls <- paste(lbls,"%",sep="") # ad % to labels
 pie(envirImpact$total,labels = lbls, col=rainbow(length(lbls)),
     main="Pie Chart of Countries")
 ```
-
-For this question, the following variables were used: EN.CLC.MDAT.ZS which is droughts, floods, extreme temps (% pop. avg), ER.H2O.FWTL.ZS which is Annual freshwater withdrawals (% of internal resources), and AG.LND.EL5M.ZS which is Land area below 5m (% of land area). After transposing the data for these specific cateogies and calculating a total value of these impacts, the figure shows that Iran/Islamic Rep was the most impacted from climate change. India is the next with highest impact. This data and finding correlates with that of what is currently being researched and reported. Iran has been heavily impacted by climate change. It has reduced their rainfall per annum and the inflow of water into rivers has reduced by 40% which in turn affects agriculture, industrial and drinking water. Similarly, India is experiencing increasing heat waves, droughts, and erratic rainfall events.
+<br />
+For this question, the following variables were used: EN.CLC.MDAT.ZS which is droughts, floods, extreme temps (% pop. avg), ER.H2O.FWTL.ZS which is Annual freshwater withdrawals (% of internal resources), and AG.LND.EL5M.ZS which is Land area below 5m (% of land area). After transposing the data for these specific cateogies and calculating an average of each specific variable and then a total value of these impacts, the pie chart figure shows that Iran/Islamic Rep was the most impacted from climate change. India is the next with highest impact. This data and finding correlates with that of what is currently being researched and reported. Iran has been heavily impacted by climate change. It has reduced their rainfall per annum and the inflow of water into rivers has reduced by 40% which in turn affects agriculture, industrial and drinking water. Similarly, India is experiencing increasing heat waves, droughts, and erratic rainfall events.
 
 **6.) How does the US gas emissions compare to other countries?**
 
 **Variable utilized:**
+<br />
 EN.ATM.CO2E.KT = CO2 emissions, total (KtCO2)
 
 ```{r}
@@ -389,6 +390,8 @@ gassignificant$gas_emission <- as.numeric(gassignificant$gas_emission)
 
 ggplot(gassignificant, aes(x=year, y=gas_emission)) + geom_bar(stat="identity") + facet_wrap(~Country_Name, scales="free") + labs(x="Year", y="Gas Emissions (KtCO2)", title="Gas Emissions from 1990-2011") + theme(axis.text.x = element_text(angle = 90))
 ```
+<br />
+
 This figure shows only the most relevant countries with larger quantities of gas emission.  This includes China, Germany, India, Iran, Islamic Republic, Japan, Korea, Democratic Republic, Russian Federation, and the United States which was found by further research that was done.
 
 It seems that US has the second most gas emissions as it also has an increasing value of gas emissions over the years with its highest value at 5461013.74 million metric tons of CO2.  This may be due the amount of transportation, electricity, industry, and agriculture that is present in the US.  There are some fluctuations that can be due to changes in economy, price of fuel, and other factors.  Overall, it follows a similar trend to other countries as there is a positive relationship between year and amount of gas emissions.  
@@ -396,13 +399,15 @@ It seems that US has the second most gas emissions as it also has an increasing 
 **7.) Which country had the most cause/impact towards climate change from 1990-2011?**
 
 **Variable utilized:**
+<br />
 EN.ATM.CO2E.KT = CO2 emissions, total (KtCO2)
 
 Looking at the same figure above, as climate change is mainly caused by gas emissions, from years 1990 to 2011, China has contributed the most towards climate change based on the provided figure.  When looking at the figure, China has an increasing gas emission value as years pass with the highest gas emission in 2008, at 7031916.21 million metric tons of CO2.  This presents relevant information as China maintains a very large infrastructure development which emits a large amount of CO2 during the refining process.  Many construction-related activities from this cause the CO2 emissions.
 
-**Conclusion**
+## Conclusion
 As previously mentioned, there were quite a few empty values for some of the variables throughout the years. We didn’t want to consider these values as 0 because they could’ve simply not have been any data to collect for that year. More specifically, the major questions we were looking into were which countries caused the most impact towards climate change and which countries were most affected by climate change. From looking at specific variables like population growth, total population, GDP and total CO2 emissions, we found that significant contributors to climate change factors were China and the United States. For looking at variables like droughts, floods, extreme temperatures, annual freshwater withdrawals, land area below 5m we found that the countries that were most impacted from climate change factors were Iran, Islamic Rep. and India. Other conclusions made were that population growth leads to an increase in GDP which in turn leads to an increase in gas emissions and gas emissions are one of the main causes of climate change. 
 
 
 **Contribution Statements**
-  For this project, the work was split up evenly between Neha Maddali (Individual 1) and Arlena Wang (Individual 2) and an equal amount of contribution was made to the project.  The data was cleaned by both indivual 1 and 2.  Questions 3, 4, and 5 were analyzed by individual 1 while questions 1, 2, 6, and 7 were analyzed by individual 2.  Other work including the presentation was equally completed by both individuals.
+<br />
+For this project, the work was split up evenly between Neha Maddali (Individual 1) and Arlena Wang (Individual 2) and an equal amount of contribution was made to the project.  The data was cleaned by both individual 1 and 2.  Questions 3, 4, and 5 were analyzed by individual 1 while questions 1, 2, 6, and 7 were analyzed by individual 2.  Other work including the presentation was equally completed by both individuals. The project report was also contributed by both individuals. Overall the teamwork and contribution went well. 
